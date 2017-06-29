@@ -27,7 +27,6 @@ HOST=`hostname --fqdn`
 PUPPETMASTER="$HOST"
 PORT=8140
 SSLDIR=/var/lib/puppet/ssl
-PUPPET_VERSION=3
 
 OPTS=`getopt -o ht:H:p:w:c:s: --long hostname:,timeout:,port:,warn:,crit:,ssl_dir: \
      -n '$0' -- "$@"`
