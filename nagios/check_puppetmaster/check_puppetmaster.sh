@@ -118,11 +118,13 @@ T2=`date +%s.%N`
 
 PERF_TIME=$( perl -e "printf('%1.3f', $T2 - $T1);" )
 
+# trim quotes and commas from environment response...
+FOUND=$( sed 's/\(\"\|,\)//g' <<< echo "$CURL_NODE" | python -m json.tool | grep '"environment":' | cut -d ':' -f2 |  head -1)
+
 if [ "$CURL_RESULT" != 0 ]; then
     EXIT=2
     MESSAGE="${URL} $CURL_NODE"
-elif FOUND=$( echo "$CURL_NODE" | python -m json.tool | grep '"environment":' | cut -d ':' -f2 |  head -1) ; then
-    # trim quotes and commas...
+elif [ ${#FOUND} != 0 ] ; then
     FOUND=`sed 's/\(\"\|,\)//g' <<<$FOUND`
     EXIT=0
     MESSAGE="found '${FOUND}' in https://${PUPPETMASTER}:${PORT}/production/node/${HOST}"
@@ -149,4 +151,3 @@ esac
 
 echo "$MESSAGE|time=${PERF_TIME}s;$TIME_WARN;$TIME_CRIT;0"
 exit $EXIT
-
